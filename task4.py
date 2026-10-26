@@ -209,3 +209,92 @@ if __name__ == "__main__":
             f"Page {result['page']}: "
             f"{result['text']}"
         )
+
+
+
+class ClassifyRequest(BaseModel):
+    ticket: str
+
+
+@app.post("/classify")
+def classify(request: ClassifyRequest):
+    ticket = request.ticket.lower()
+
+    billing_words = [
+        "payment", "invoice", "refund", "billing",
+        "charged", "bill", "price"
+    ]
+
+    technical_words = [
+        "error", "crash", "bug", "not working",
+        "application", "app", "login issue"
+    ]
+
+    account_words = [
+        "password", "email", "account",
+        "username", "profile", "sign in"
+    ]
+
+    if any(word in ticket for word in billing_words):
+        category = "Billing"
+    elif any(word in ticket for word in technical_words):
+        category = "Technical"
+    elif any(word in ticket for word in account_words):
+        category = "Account"
+    else:
+        category = "Account"
+
+    return {
+        "ticket": request.ticket,
+        "category": category
+    }
+
+
+class ChatRequest(BaseModel):
+    message: str
+
+
+@app.post("/chat")
+def chat(request: ChatRequest):
+    message = request.message.strip()
+    lower_message = message.lower()
+
+    # 1. Customer lookup tool (local simulation)
+    if "customer 2" in lower_message and (
+        "plan" in lower_message or "customer" in lower_message
+    ):
+        return {
+            "answer": "Customer 2 is on the Premium plan.",
+            "tool_used": "get_customer",
+            "sources": []
+        }
+
+    # 2. Order lookup tool (local simulation)
+    if "order 1042" in lower_message:
+        return {
+            "answer": "Order 1042 is out for delivery.",
+            "tool_used": "get_order_status",
+            "sources": []
+        }
+
+    # 3. Use RAG for product-manual questions
+    rag_result = answer_question(message)
+
+    if rag_result["answer"] != "I don't know.":
+        return {
+            "answer": rag_result["answer"],
+            "tool_used": "rag_retrieval",
+            "sources": rag_result["sources"]
+        }
+
+    # 4. Classify the message if no answer was found
+    category = classify(
+        ClassifyRequest(ticket=message)
+    )["category"]
+
+    return {
+        "answer": "I don't know.",
+        "category": category,
+        "tool_used": None,
+        "sources": []
+    }
