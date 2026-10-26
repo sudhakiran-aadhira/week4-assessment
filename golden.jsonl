@@ -1,0 +1,12 @@
+{"ticket":"I was charged twice for my subscription.","category":"Billing"}
+{"ticket":"Please send my payment invoice.","category":"Billing"}
+{"ticket":"My refund has not arrived.","category":"Billing"}
+{"ticket":"My credit card payment failed.","category":"Billing"}
+{"ticket":"The application crashes when I open it.","category":"Technical"}
+{"ticket":"The website shows a server error.","category":"Technical"}
+{"ticket":"The application is running very slowly.","category":"Technical"}
+{"ticket":"The app displays a blank screen.","category":"Technical"}
+{"ticket":"I need to change my registered email.","category":"Account"}
+{"ticket":"Please reset my account password.","category":"Account"}
+{"ticket":"I want to update my profile details.","category":"Account"}
+{"ticket":"Please close my customer account.","category":"Account"}

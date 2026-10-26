@@ -1,0 +1,7 @@
+Open prompts/classifier_v1.txt and paste:
+
+
+Classify the customer ticket into Billing, Technical, or Account.
+Return only the category name.
+
+Ticket: {ticket}
